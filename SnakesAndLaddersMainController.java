@@ -1,7 +1,7 @@
 /** SnakesAndLadderMainController class
   * Class for the controllers of the buttons in the main frame
   * @since Jan 22, 2023
-  * @author Waleed Rashid
+  * @author Naeem Hussain
   */
 
 import javax.swing.*;
