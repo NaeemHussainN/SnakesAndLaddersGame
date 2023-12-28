@@ -1,0 +1,52 @@
+import javax.swing.*;
+import java.awt.event.*;
+
+public class SnakesAndLaddersRoundsController implements ActionListener
+{
+  private SnakesAndLaddersMenuModel menuModel;
+  
+  private JTextField rounds;
+  private JTextField name;
+  private JButton next;
+  
+  public SnakesAndLaddersRoundsController (SnakesAndLaddersMenuModel menuModel, JTextField rounds, JTextField name, JButton next)
+  {
+    super ();
+    
+    this.menuModel = menuModel;
+    this.rounds = rounds;
+    this.name = name;
+    this.next = next;
+  }
+  
+  public void actionPerformed (ActionEvent e)
+  {
+    int numRounds;
+    
+    try 
+    {
+      numRounds = Integer.parseInt (this.rounds.getText ());
+      this.menuModel.setTotalRounds (numRounds);
+      
+      if (numRounds > 7 || numRounds < 1)
+      {
+        System.out.println ("Please enter a number between 1-7");
+        this.rounds.selectAll ();
+      }
+      
+      else
+      {
+        this.rounds.setEnabled (false);
+        this.next.setEnabled (true);
+      }
+    }
+    
+    catch (NumberFormatException ex)
+    {
+      this.rounds.selectAll ();
+      System.out.println ("Please enter a valid number");
+    }
+    
+  }
+  
+}

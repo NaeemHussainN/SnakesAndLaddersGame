@@ -1,0 +1,24 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class SnakesAndsLaddersStartup
+{
+  public static void main (String [] args)
+  {
+    // Menu GUI
+    JFrame menuFrame = new JFrame ();
+    SnakesAndLaddersMenuModel menuModel = new SnakesAndLaddersMenuModel (menuFrame);
+    SnakesAndLaddersMenuView menuView = new SnakesAndLaddersMenuView (menuModel);
+    
+    menuFrame.setContentPane (menuView);
+    menuFrame.setLocation (750,250);
+    menuFrame.setSize (400,400);
+    menuFrame.setTitle ("Snakes And Ladders");
+    menuFrame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+    menuFrame.setVisible (true);
+  }
+}
+////////// Change invalid number for rounds input display
+
+///////// Try adding delay between turns
+///////// Try lowering opacity of player piece backgrounds (only apply if delay works)

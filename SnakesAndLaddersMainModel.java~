@@ -1,0 +1,798 @@
+import java.io.PrintWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*; 
+import java.util.Scanner;
+import javax.swing.*;
+import java.text.SimpleDateFormat;
+
+public class SnakesAndLaddersMainModel {
+  private static final int BOARD_SIZE = 100;
+  private static final int[] SNAKES = {45, 63, 95};
+  private static final int[] SNAKE_ENDS = {25, 38, 32};
+  
+  private static final int[] LADDERS = {18, 29, 68};
+  private static final int[] LADDERS_ENDS = {42, 77, 90};
+  //Special Spaces
+  private static final int[] SPECIAL_SPACES = new int [4];
+  private static final int[] SPECIAL_MOVES = new int [4];
+  
+  private JFrame mainFrame;
+  
+  SnakesAndLaddersMainView mainView;
+  SnakesAndLaddersMenuModel menuModel;
+  private int playerPosition;
+  private int computerPosition;
+  private int currentRound;
+  private int totalRounds;
+  private int playerWins;
+  private int computerWins;
+  private int playerTotalKnockouts;
+  private int computerTotalKnockouts;
+  private int playerRoundKnockouts;
+  private int computerRoundKnockouts;
+  private String playerLogText;
+  private String computerLogText;
+  private String burnsMessage;
+  private String winner;
+  
+  private String [] colours = new String [] {"RED", "BLUE", "GREEN", "YELLOW", "PURPLE", "ORANGE"};
+  
+  private boolean gameEnded;
+  private boolean wentDownSnake;
+  private boolean wentUpLadder;
+  private boolean playerTurn;
+  private boolean onLastRound;
+  private boolean gameInitialized;
+  private boolean isWinner;
+  
+  private int dice1Num;
+  private int dice2Num;
+  private int total;
+  
+  private int yourRoll;
+  private int burnsRoll;
+  
+  private int playerLogLines;
+  private int computerLogLines;
+  
+  private int diceRoll;
+  
+  private int spacesTo100;
+  
+  private int bounceBackPosition;
+  
+  private String playerStatsText;
+  private String computerStatsText;
+  
+  private int playerNumSnakesUsed;
+  private int computerNumSnakesUsed;
+  
+  private int playerNumLaddersUsed;
+  private int computerNumLaddersUsed;
+  
+  private int playerNumSpecialSpacesUsed;
+  private int computerNumSpecialSpacesUsed;
+  
+  // private Timer timer;
+  
+  public SnakesAndLaddersMainModel(SnakesAndLaddersMenuModel menuModel, JFrame mainFrame) {
+    super();
+    
+    this.menuModel = menuModel;
+    this.mainFrame = mainFrame;
+    
+    playerPosition = 1;
+    computerPosition = 1;
+    currentRound = 1;
+    totalRounds = 0;
+    
+    playerWins = 0;
+    computerWins = 0;
+    playerTotalKnockouts = 0;
+    computerTotalKnockouts = 0;
+    playerRoundKnockouts = 0;
+    computerRoundKnockouts = 0;
+    playerLogText = this.menuModel.getPlayerName () + " Log";
+    computerLogText = "Burns Log";
+    burnsMessage = this.burnsRandomIntro ();
+    
+    this.dice1Num = 1;
+    this.dice2Num = 1;
+    this.total = 0;
+    
+    this.playerLogLines = 1;
+    this.computerLogLines = 1;
+    
+    spacesTo100 = 0;
+    
+    gameInitialized = true;
+    isWinner = false;
+    winner = "";
+    
+    playerStatsText = "";
+    computerStatsText = "";
+  }
+  
+  public void setGUI(SnakesAndLaddersMainView currentGUI) {
+    this.mainView = currentGUI;
+  }
+  
+  public void setComputerPosition(int computerPosition) {
+    this.computerPosition = computerPosition;
+  }
+  
+  public void setPlayerWins(int playerWins) {
+    this.playerWins = playerWins;
+  }
+  
+  public int getPlayerPosition() {
+    return playerPosition;
+  }
+  
+  public int getComputerPosition() {
+    return computerPosition;
+  }
+  
+  public int getCurrentRound() {
+    return currentRound;
+  }
+  
+  public boolean getGameEnded ()
+  {
+    return this.gameEnded;
+  }
+  
+  public int getDice1Num ()
+  {
+    return this.dice1Num;
+  }
+  
+  public int getDice2Num ()
+  {
+    return this.dice2Num;
+  }
+  
+  public int getTotal ()
+  {
+    return this.total;
+  }
+  
+  public int getPlayerWins() {
+    return playerWins;
+  }
+  
+  public boolean getOnLastRound ()
+  {
+    return this.onLastRound;
+  }
+  
+  public void playAgain ()
+  {
+    if (this.currentRound < this.menuModel.getTotalRounds ())
+    {
+      this.dice1Num = 1;
+      this.dice2Num = 1;
+      this.total = 0;
+      
+      this.playerRoundKnockouts = 0;
+      this.computerRoundKnockouts = 0;
+      
+      this.playerLogText = this.menuModel.getPlayerName () + " Log";
+      this.computerLogText = "Burns Log";
+      this.playerLogLines = 1;
+      this.computerLogLines = 1;
+      
+      playerPosition = 1;
+      computerPosition = 1;
+      
+      this.gameEnded = true;
+      this.isWinner = false;
+      
+      this.mainView.playAgain ();
+      this.currentRound++;
+    }
+    
+  }
+  
+  public String getPlayerLogText ()
+  {
+    return this.playerLogText;
+  }
+  
+  public String getComputerLogText ()
+  {
+    return this.computerLogText;
+  }
+  
+  public String getBurnsMessage ()
+  {
+    return this.burnsMessage;
+  }
+  
+  public void setPlayerPosition(int playerPosition) {
+    this.playerPosition = playerPosition;
+  }
+  
+  public boolean getPlayerTurn ()
+  {
+    return this.playerTurn;
+  }
+  
+  public boolean getIsWinner ()
+  {
+    return this.isWinner;
+  }
+  
+  public String getWinner ()
+  {
+    return this.winner;
+  }
+  
+  public String getPlayerStats ()
+  {
+    return this.playerStatsText;
+  }
+  
+  public String getBurnsStats ()
+  {
+    return this.computerStatsText;
+  }
+  
+  public void getAndSortSpecialSpaces ()
+  {
+    //Input 5 random numbers into the array
+    for(int x = 0; x < SPECIAL_SPACES.length; x++)
+    {
+      SPECIAL_SPACES [x] = (int)(Math.random() * 97 + 3);
+    }
+    
+    for (int i = 0; i < SPECIAL_SPACES.length - 1; i++) 
+    {
+      int minIndex = i;
+      for (int j = i + 1; j < SPECIAL_SPACES.length; j++) 
+      {
+        if (SPECIAL_SPACES[j] < SPECIAL_SPACES[minIndex]) 
+        {
+          minIndex = j;
+        }
+      }
+      int temp = SPECIAL_SPACES[i];
+      SPECIAL_SPACES[i] = SPECIAL_SPACES[minIndex];
+      SPECIAL_SPACES[minIndex] = temp;
+      
+    }
+  }
+  
+  public int rollDice ()
+  {
+    this.dice1Num = (int)(Math.random () * 6 + 1);
+    this.dice2Num = (int)(Math.random () * 6 + 1);
+    
+    this.total = this.dice1Num + this.dice2Num;
+    return this.total;
+  }
+  
+  public void setDiceRoll (int diceRoll)
+  {
+    this.diceRoll = diceRoll;
+  }
+  
+  public void bounceBack() {
+    if (playerTurn == true) {
+      spacesTo100 = BOARD_SIZE - playerPosition;
+      // System.out.println ("Player position is " + playerPosition);
+      if(this.total > spacesTo100){
+        playerPosition = BOARD_SIZE - (this.total - spacesTo100);
+        bounceBackPosition = playerPosition;
+        setPlayerPosition (playerPosition);
+        //  System.out.println ("Bounce Back new position is " + playerPosition);
+      }
+    }
+    else if (playerTurn == false) {
+      spacesTo100 = BOARD_SIZE - computerPosition;
+      //  System.out.println ("Computer position is " + playerPosition);
+      if(this.total > spacesTo100){
+        computerPosition = BOARD_SIZE - (this.total - spacesTo100);
+        bounceBackPosition = computerPosition;
+        setComputerPosition (computerPosition);
+        //    System.out.println ("BounceBack new position is " + computerPosition);
+      }
+    }
+  }
+  
+  public void movePlayer(int playerPosition, int playerRoll)
+  {
+    playerRoll = this.total;
+    yourRoll = playerRoll;
+    int newPosition = this.playerPosition + playerRoll;
+    //  System.out.println (this.menuModel.getPlayerName () + " rolled " + playerRoll);
+    
+    if (newPosition > BOARD_SIZE)
+    {
+      bounceBack ();
+      this.playerLogText = this.playerLogText + "\n" + playerPosition + " -> " + bounceBackPosition;
+    }
+    
+    else
+    {
+      setPlayerPosition(newPosition);
+      this.playerLogText = this.playerLogText + "\n" + playerPosition + " -> " + newPosition;
+    }
+    
+    playerLogLines++;
+    checkPlayerLogLines ();
+  }
+  
+  public void moveComputer(int computerPosition, int computerRoll)
+  {
+    computerRoll = this.total;
+    burnsRoll = computerRoll;
+    
+    int newPosition = computerPosition + computerRoll;
+    //  System.out.println ("Burns rolled " + computerRoll);
+    
+    if (newPosition > BOARD_SIZE)
+    {
+      bounceBack ();
+      this.computerLogText = this.computerLogText + "\n" + computerPosition + " -> " + bounceBackPosition;
+    }
+    
+    else
+    {
+      setComputerPosition(newPosition);
+      this.computerLogText = this.computerLogText + "\n" + computerPosition + " -> " + newPosition;
+    }
+    
+    computerLogLines++;
+    checkComputerLogLines ();
+  }
+  
+  public int getYourRoll ()
+  {
+    return this.yourRoll;
+  }
+  
+  public int getBurnsRoll ()
+  {
+    return this.burnsRoll;
+  }
+  
+  
+  
+  // FIX THIS METHOD
+//Check if a player knocked out the opponent
+  public void checkKnockOut(int currentPosition, int opponentPosition) {
+    if (currentPosition == opponentPosition) {
+      if (playerTurn== true)
+      {
+        setComputerPosition(1);
+        // System.out.println (this.menuModel.getPlayerName () + " knocked out Burns");
+        computerLogText = computerLogText + "\nKnocked out";
+        burnsRandomKnockOutReply ();
+        playerTotalKnockouts++;
+        playerRoundKnockouts++;
+      }
+      else if(playerTurn == false)
+      {
+        setPlayerPosition(1);
+        // System.out.println ("Burns knocked out " + this.menuModel.getPlayerName ());
+        playerLogText = playerLogText + "\nKnocked out";
+        burnsRandomKnockedOutReply ();
+        computerTotalKnockouts++;
+        computerRoundKnockouts++;
+      }
+    }
+    
+  }
+  
+  
+  public void playGame() {
+    
+    this.burnsMessage = "";
+    
+    if (this.currentRound == this.menuModel.getTotalRounds ())
+    {
+      this.onLastRound = true;
+    }
+    
+    computerTurn ();
+    playerTurn ();
+    
+    
+    this.gameEnded = false;
+    
+    if (this.isWinner == true)
+    {
+      saveGame ();
+    }
+  }
+  
+  
+  public void playerTurn ()
+  {
+    int playerRoll = 0;
+    
+    playerTurn = true;
+    playerRoll = rollDice();
+    movePlayer(playerPosition, playerRoll);
+    // delay();
+    checkLadders(playerPosition);
+    checkSnakes(playerPosition);
+    checkKnockOut(playerPosition, computerPosition);
+    checkSpecialSpaces(playerPosition);
+    
+    checkWin();
+  }
+  
+  public void computerTurn()
+  {
+    int computerRoll = 0;
+    
+    playerTurn = false;
+    computerRoll = rollDice();
+    moveComputer(computerPosition, computerRoll);
+    // delay();
+    checkLadders(computerPosition);
+    checkSnakes(computerPosition);
+    checkKnockOut(computerPosition, playerPosition);
+    checkSpecialSpaces(computerPosition);
+    
+    //checkWin(); 
+  }
+  
+  public void checkPlayerLogLines ()
+  {
+    if (playerLogLines == 12)
+    {
+      playerLogLines = 1;
+      playerLogText = this.menuModel.getPlayerName () + " Log";
+    }
+  }
+  
+  public void checkComputerLogLines ()
+  {
+    if (computerLogLines == 12)
+    {
+      computerLogLines = 1;
+      computerLogText = "Burns Log";
+    }
+  }
+  
+  public String burnsRandomIntro ()
+  {
+    int random = (int)(Math.random () * 100 + 1);
+    
+    if (random >= 0 && random <= 33)
+      burnsMessage = "Ready to lose?";
+    
+    else if (random >= 34 && random <= 66)
+      burnsMessage = "Didn't I beat you last time?";
+    
+    else if (random >= 67 && random <= 100)
+      burnsMessage = "Let's play!";
+    
+    return burnsMessage;
+  }
+  
+  public void burnsRandomSnakeReply ()
+  {
+    int random = (int)(Math.random () * 100 + 1);
+    
+    if (random >= 0 && random <= 33)
+      burnsMessage = "You're garbage!";
+    
+    else if (random >= 34 && random <= 66)
+      burnsMessage = "You stink!";
+    
+    else if (random >= 67 && random <= 100)
+      burnsMessage = "Down the snake you go!";
+  }
+  
+  public void burnsRandomLadderReply ()
+  {
+    int random = (int)(Math.random () * 100 + 1);
+    
+    if (random >= 0 && random <= 33)
+      burnsMessage = "Only losers use\nladders.";
+    
+    else if (random >= 34 && random <= 66)
+      burnsMessage = "You really need ladders\nto win?";
+    
+    else if (random >= 67 && random <= 100)
+      burnsMessage = "That ladder won't stop\nme from beating you!";
+  }
+  
+  public void burnsRandomWinReply ()
+  {
+    int random = (int)(Math.random () * 100 + 1);
+    
+    if (random >= 0 && random <= 33)
+      burnsMessage = "Beginner's luck.";
+    
+    else if (random >= 34 && random <= 66)
+      burnsMessage = "I'll beat you next time\njust watch!";
+    
+    else if (random >= 67 && random <= 100)
+      burnsMessage = "I went easy on you\ndon't get excited.";
+  }
+  
+  public void burnsRandomLossReply ()
+  {
+    int random = (int)(Math.random () * 100 + 1);
+    
+    if (random >= 0 && random <= 33)
+      burnsMessage = "Better luck next\ntime!";
+    
+    else if (random >= 34 && random <= 66)
+      burnsMessage = "I'm failing you for\nplaying so bad!";
+    
+    else if (random >= 67 && random <= 100)
+      burnsMessage = "I can beat you\nin my sleep.";
+  }
+  
+  public void burnsRandomKnockOutReply ()
+  {
+    int random = (int)(Math.random () * 100 + 1);
+    
+    if (random >= 0 && random <= 33)
+      burnsMessage = "Get back here!";
+    
+    else if (random >= 34 && random <= 66)
+      burnsMessage = "I'll catch up!";
+    
+    else if (random >= 67 && random <= 100)
+      burnsMessage = "Wow that was brutal!";
+  }
+  
+  public void burnsRandomKnockedOutReply ()
+  {
+    int random = (int)(Math.random () * 100 + 1);
+    
+    if (random >= 0 && random <= 33)
+      burnsMessage = "Haha get lost!";
+    
+    else if (random >= 34 && random <= 66)
+      burnsMessage = "One way ticket back to\nthe start!";
+    
+    else if (random >= 67 && random <= 100)
+      burnsMessage = "Dang you're taking up\nthis entire space, get\noutta here!";
+  }
+  
+  public void delay()
+  {
+    try
+    {
+      // Delay for 3 seconds
+      Thread.sleep(500);
+    }
+    catch(InterruptedException ex)
+    {
+      ex.printStackTrace();
+    }
+  }
+  
+  public int getSpecialSpaces (int index)
+  {
+    return this.SPECIAL_SPACES [index];
+  }
+  
+  public int getSpecialMoves (int index)
+  {
+    return this.SPECIAL_MOVES [index];
+  }
+  
+  public int getPlayerLogLines ()
+  {
+    return this.playerLogLines;
+  }
+  
+  public void getAndSortSpecialMoves() {
+    
+    // Input 5 random numbers into the array
+    for (int x = 0; x < SPECIAL_MOVES.length; x++) {
+      SPECIAL_MOVES[x] = (int) (Math.random() * 10 + 1);
+    }
+    
+    // Sort those numbers in descending order (Selection)
+    for (int i = 0; i < SPECIAL_MOVES.length - 1; i++) {
+      int maxIndex = i;
+      for (int j = i + 1; j < SPECIAL_MOVES.length; j++) {
+        if (SPECIAL_MOVES[j] > SPECIAL_MOVES[maxIndex]) {
+          maxIndex = j;
+        }
+      }
+      int temp = SPECIAL_MOVES[i];
+      SPECIAL_MOVES[i] = SPECIAL_MOVES[maxIndex];
+      SPECIAL_MOVES[maxIndex] = temp;
+      
+    }
+  }
+  
+  /*If the current position is present in the SNAKES/LADDERS/SPECIAL SPACES array, the binarySearch method will return the index of the element,
+   otherwise, it will return a negative value.*/
+  
+  // Check if the player's current position is on top of a snake and changes position accordingly.
+  public void checkSnakes(int newPosition) {
+    int snakeIndex = Arrays.binarySearch(SNAKES, newPosition);
+    if (snakeIndex >= 0) {
+      
+      newPosition = SNAKE_ENDS[snakeIndex];
+      
+      if (playerTurn== true)
+      {
+        setPlayerPosition(newPosition);
+        
+        this.playerLogText = this.playerLogText + "\nPlayer <- Snake";
+        burnsRandomSnakeReply ();
+        
+        playerNumSnakesUsed++;
+        
+        playerLogLines++;
+        checkPlayerLogLines ();
+      }
+      
+      else if(playerTurn == false)
+      {
+        setComputerPosition(newPosition);
+        this.computerLogText = this.computerLogText + "\nBurns <- Snake";
+        
+        computerNumSnakesUsed++;
+        
+        computerLogLines++;
+        checkComputerLogLines ();
+      }
+      
+      
+    }
+  }
+  
+  // Check if the player's current position is on top of a ladder and changes position accordingly.
+  public void checkLadders(int newPosition) {
+    int ladderIndex  = Arrays.binarySearch(LADDERS, newPosition);
+    if (ladderIndex >= 0) {
+      newPosition = LADDERS_ENDS[ladderIndex];
+      
+      if (playerTurn== true)
+      {
+        setPlayerPosition(newPosition);
+        this.playerLogText = this.playerLogText + "\nPlayer -> Ladder";
+        burnsRandomLadderReply ();
+        
+        playerNumLaddersUsed++;
+        
+        playerLogLines++;
+        checkPlayerLogLines ();
+      }
+      else if(playerTurn == false)
+      {
+        setComputerPosition(newPosition);
+        this.computerLogText = this.computerLogText + "\nBurns -> Ladder";
+        
+        computerNumLaddersUsed++;
+        
+        computerLogLines++;
+        checkComputerLogLines ();
+      }
+    }
+  }
+  
+  //Check if the player landed on a special space and increments the current position by the special move amount .
+  public void checkSpecialSpaces(int newPosition) {
+    int specialIndex = Arrays.binarySearch(SPECIAL_SPACES, newPosition);
+    if (specialIndex >= 0) {
+      newPosition += SPECIAL_MOVES[specialIndex];
+      if (playerTurn== true)
+      {
+        setPlayerPosition(newPosition);
+        playerLogText = playerLogText + "\nSpecial Space";
+        playerNumSpecialSpacesUsed++;
+      }
+      else if(playerTurn == false)
+      {
+        setComputerPosition(newPosition);
+        computerLogText = computerLogText + "\nSpecial Space";
+        computerNumSpecialSpacesUsed++;
+      }
+      //  System.out.println ("SPECIAL SPACE");
+    }
+  }
+  
+  public void endGame() {
+    playerPosition = 0;
+    computerPosition = 0;
+    playerWins = 0;
+    computerWins = 0;
+  }
+  
+  public void checkWin() {
+    if (playerPosition == BOARD_SIZE) {
+      playerWins++;
+      this.playerLogText = this.playerLogText + "\nWINNER!";
+      declareWinner(this.menuModel.getPlayerName ());
+      playerPosition = 100;
+      burnsRandomWinReply ();
+    } else if (computerPosition == BOARD_SIZE) {
+      computerWins++;
+      this.computerLogText = this.computerLogText + "\nWINNER!";
+      declareWinner("Burns");
+      computerPosition = 100;
+      burnsRandomLossReply ();
+    }
+    this.playerStatsText = "\nSnakes Used: " + this.playerNumSnakesUsed + "\nLadders Used: " + this.playerNumLaddersUsed + "\nSpecial Spaces Used: " + this.playerNumSpecialSpacesUsed + "\nKnockouts: " + this.playerRoundKnockouts + "\nWins: " + this.playerWins;
+    this.computerStatsText = "\nSnakes Used: " + this.computerNumSnakesUsed + "\nLadders Used: " + this.computerNumLaddersUsed + "\nSpecial Spaces Used: " + this.computerNumSpecialSpacesUsed + "\nKnockouts: " + this.computerRoundKnockouts + "\nWins: " + this.computerWins;
+  }
+  
+  public void declareWinner(String winner) {
+    this.winner = winner; 
+    this.isWinner = true;
+    this.mainView.gameEnded ();
+  }
+  
+  /* public void saveGame() {
+   File file = new File("SnakesAndLadders.txt");
+   try {
+   PrintWriter writer = new PrintWriter(file);
+   writer.println("Rounds Played: " + this.currentRound + " / " + this.menuModel.getTotalRounds ());
+   writer.println ();
+   writer.println (this.menuModel.getPlayerName () + " Colour: " + this.colours [this.menuModel.getColourNum ()]);
+   writer.println (this.menuModel.getPlayerName () + " Knockouts: " + playerTotalKnockouts);
+   writer.println(this.menuModel.getPlayerName () + " Wins: " + playerWins);
+   writer.println ();
+   writer.println ("Burns Colour: " + this.colours [this.menuModel.getComputerColour ()]);
+   writer.println ("Burns Knockouts: " + computerTotalKnockouts);
+   writer.println("Burns Wins: " + computerWins);
+   writer.close();
+   } catch (IOException e) {
+   e.printStackTrace();
+   }
+   } */
+  
+  public void saveGame() {
+    // Create a file name using the current date and time
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy_HH:mm:ss");
+    String currentDateTime = dateFormat.format(new Date());
+    
+    // Create a folder for game stats
+    File folder = new File("SnakesAndLadders Games");
+    if (!folder.exists()) {
+      folder.mkdir();
+    }
+    
+    // Create a file with current date and time as name
+    File file = new File(folder, "SnakesAndLadders_" + currentDateTime + ".txt");
+    
+    try {
+      PrintWriter writer = new PrintWriter(file);
+      writer.println("Rounds Played: " + this.currentRound + " / " + this.menuModel.getTotalRounds ());
+      writer.println ();
+      writer.println (this.menuModel.getPlayerName () + " Colour: " + this.colours [this.menuModel.getColourNum ()]);
+      writer.println (this.menuModel.getPlayerName () + " Knockouts: " + playerTotalKnockouts);
+      writer.println(this.menuModel.getPlayerName () + " Wins: " + playerWins);
+      writer.println ();
+      writer.println ("Burns Colour: " + this.colours [this.menuModel.getComputerColour ()]);
+      writer.println ("Burns Knockouts: " + computerTotalKnockouts);
+      writer.println("Burns Wins: " + computerWins);
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  public void backToMainMenu ()
+  {
+    JFrame menuFrame = new JFrame ();
+    SnakesAndLaddersMenuModel menuModel = new SnakesAndLaddersMenuModel (menuFrame);
+    SnakesAndLaddersMenuView menuView = new SnakesAndLaddersMenuView (menuModel);
+    
+    menuFrame.setContentPane (menuView);
+    menuFrame.setLocation (750,250);
+    menuFrame.setSize (400,400);
+    menuFrame.setTitle ("Snakes And Ladders");
+    menuFrame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
+    menuFrame.setVisible (true);
+    
+    this.mainFrame.setVisible (false);
+  }
+}

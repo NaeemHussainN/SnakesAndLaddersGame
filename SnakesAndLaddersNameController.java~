@@ -1,0 +1,30 @@
+import javax.swing.*;
+import java.awt.event.*;
+
+public class SnakesAndLaddersNameController implements ActionListener
+{
+  private SnakesAndLaddersMenuModel menuModel;
+  
+  private JTextField name;
+  private JTextField round;
+  
+  public SnakesAndLaddersNameController (SnakesAndLaddersMenuModel menuModel, JTextField name, JTextField round)
+  {
+    super ();
+    
+    this.menuModel = menuModel;
+    this.name = name;
+    this.round = round;
+  }
+  
+  public void actionPerformed (ActionEvent e)
+  {
+    String playerName;
+    
+    playerName = this.name.getText ();
+    this.menuModel.setPlayerName (playerName);
+    this.name.setEnabled (false);
+    this.round.setEnabled (true);
+  }
+  
+}
