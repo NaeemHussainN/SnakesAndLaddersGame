@@ -1,7 +1,7 @@
 /** SnakesAndLadderBoardDrawing class
   * Class that draws the board and pieces in their new positions
   * @since Jan 22, 2023
-  * @author Waleed Rashid
+  * @author Naeem Hussain 
   */
 
 import javax.swing.*;
