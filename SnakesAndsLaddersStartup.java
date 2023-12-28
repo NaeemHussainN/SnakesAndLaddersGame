@@ -1,7 +1,7 @@
 /** SnakesAndsLaddersStartup class
   * Class for the menu GUI startup
   * @since Jan 22, 2023
-  * @author Waleed Rashid
+  * @author Naeem Hussain
   */
 
 import javax.swing.*;
