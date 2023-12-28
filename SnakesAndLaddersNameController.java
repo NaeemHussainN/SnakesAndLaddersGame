@@ -1,7 +1,7 @@
 /** SnakesAndLaddersNameController class
   * Class for the controller of the name input by user
   * @since Jan 22, 2023
-  * @author Waleed Rashid
+  * @author Naeem Hussain
   */
 
 import javax.swing.*;
