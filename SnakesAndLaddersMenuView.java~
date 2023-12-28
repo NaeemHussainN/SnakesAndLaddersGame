@@ -1,7 +1,7 @@
 /** SnakesAndLaddersMenuView class
   * Class for the GUI of the main, colour, and help menus
   * @since Jan 12, 2023
-  * @author Waleed Rashid
+  * @author Naeem Hussain
   */
 
 import javax.swing.*;
@@ -253,7 +253,7 @@ public class SnakesAndLaddersMenuView extends JPanel
     
     JTextArea instructions = new JTextArea (10,10);
    
-    instructions.setText ("Welcome to Snakes and Ladders!\n\nHow to Play:\nYou will compete against Mr. Burns in a race from the 1st space to the 100th\nspace. Landing on the heads of the snakes that are scattered around the\nboard will result in you sliding down to their tails. On the contrary, landing on\nthe bottom of the ladders on the board will allow you to climb to its top, getting\ncloser to that 100th space. Landing at the bottom of a snake or the top of a\nladder will keep the player where they are, not impacting their placement.\nLanding on another player’s piece will allow you to knock them all the way to\nthe beginning of the board. In order to win, a player must roll exactly the\nnumber of spaces until the 100th square (For example, if the player is on\nsquare 96, they must roll a 4 to win). If a number higher than needed to win is\nrolled, the player will proceed until 100, then bounce back the remaining\namount (For example, if a player is on square 96 and roll a 6, they will get to\n100, and bounce back 2 spaces). Special spaces are randomly generated\naround the board, and landing on them can either benefit or detriment your\nchances of victory.\n\nGood Luck!");                     
+    instructions.setText ("Welcome to Snakes and Ladders!\n\nHow to Play:\nYou will compete against Mr. Burns in a race from the 1st space to the 100th\nspace. Landing on the heads of the snakes that are scattered around the\nboard will result in you sliding down to their tails. On the contrary, landing on\nthe bottom of the ladders on the board will allow you to climb to its top, getting\ncloser to that 100th space. Landing at the bottom of a snake or the top of a\nladder will keep the player where they are, not impacting their placement.\nLanding on another playerÂ’s piece will allow you to knock them all the way to\nthe beginning of the board. In order to win, a player must roll exactly the\nnumber of spaces until the 100th square (For example, if the player is on\nsquare 96, they must roll a 4 to win). If a number higher than needed to win is\nrolled, the player will proceed until 100, then bounce back the remaining\namount (For example, if a player is on square 96 and roll a 6, they will get to\n100, and bounce back 2 spaces). Special spaces are randomly generated\naround the board, and landing on them can either benefit or detriment your\nchances of victory.\n\nGood Luck!");                     
     instructions.setEditable (false);
     instructions.setFont (new Font ("Arial", Font.PLAIN, 11));
     //instructions.setForeground (Color.WHITE);
