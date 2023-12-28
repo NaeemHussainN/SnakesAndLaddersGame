@@ -1,7 +1,7 @@
 /** SnakesAndLaddersMenuController class
   * Class for the controllers of the buttons in the menu frame
   * @since Jan 12, 2023
-  * @author Waleed Rashid
+  * @author Naeem Hussain
   */
 
 import javax.swing.*;
