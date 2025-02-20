@@ -71,7 +71,3 @@ SnakesAndLaddersGame/
 ## Contributing
 
 Contributions are welcome! Feel free to fork the repository and submit a pull request.
-
-## Acknowledgments
-
-Special thanks to all contributors and testers who helped make this project possible.
